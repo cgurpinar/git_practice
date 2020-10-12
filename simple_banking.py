@@ -21,7 +21,7 @@ def create_account():
     return generate, pin
 
 
-def find_checksum(card_number):  # FIND LAST DIGIT WITH LUHN'S ALGORITHM
+def find_checksum(card_number):                 # FIND LAST DIGIT WITH LUHN'S ALGORITHM
     temp = [int(card_number[i]) * 2 if i % 2 == 0 else int(card_number[i]) for i in range(len(str(card_number)))]
     temp = [int(temp[i]) - 9 if int(temp[i]) > 9 else int(temp[i]) for i in range(len(temp))]
 
@@ -38,20 +38,20 @@ def find_checksum(card_number):  # FIND LAST DIGIT WITH LUHN'S ALGORITHM
     return str(checksum)
 
 
-def check_luhn_algo(card_number):  # validate card number against Luhn's Algorithm
+def check_luhn_algo(card_number):               # validate card number against Luhn's Algorithm
     cn_last_number = str(card_number)[-1]
     checksum = find_checksum(card_number[:-1])
     return True if str(checksum) == str(cn_last_number) else False
 
 
-def check_card(card_number):  # is card exists?
+def check_card(card_number):                    # is card exists?
     check = cur.execute(f"SELECT EXISTS(SELECT number FROM card WHERE number = {card_number})")
     for con in check:
         check = con[0]
     return bool(check)
 
 
-def check_acc(card_number, u_pin):  # is acc exists?
+def check_acc(card_number, u_pin):              # is acc exists?
     if check_card(card_number):
         c_pin = cur.execute(f"SELECT pin FROM card WHERE number = {card_number}")
         for c in c_pin:
@@ -131,14 +131,14 @@ while not exit_:
                 print("\n1. Balance\n2. Add income\n3. Do transfer\n4. Close account\n5. Log out\n0. Exit")
                 u_choice = input()
 
-                if u_choice == "1":  # Balance
+                if u_choice == "1":             # Balance
                     print("Balance: {}".format(show_balance(u_card_number)))
 
-                elif u_choice == "2":  # Add Income
+                elif u_choice == "2":           # Add Income
                     a_income = int(input("Enter income:"))
                     add_income(u_card_number, a_income)
 
-                elif u_choice == "3":  # Do Transfer
+                elif u_choice == "3":           # Do Transfer
                     print("Transfer")
                     print("Enter card number:")
                     t_card_number = str(input())
@@ -156,16 +156,16 @@ while not exit_:
                     else:
                         print('Probably you made mistake in card number. Please try again!')
 
-                elif u_choice == "4":  # Close Account
+                elif u_choice == "4":           # Close Account
                     del_acc(u_card_number)
                     print("The account has been closed!")
                     log_out = True
 
-                elif u_choice == "5":  # Log out
+                elif u_choice == "5":           # Log out
                     log_out = True
                     print("You have successfully logged out!")
 
-                elif u_choice == "0":  # Exit
+                elif u_choice == "0":           # Exit
                     print("Bye!")
                     log_out = True
                     exit_ = True
@@ -173,5 +173,5 @@ while not exit_:
         else:
             print("Wrong card number or PIN!")
 
-conn.commit()
-conn.close()
+conn.commit()       # Save database changes
+conn.close()        # End the connection
